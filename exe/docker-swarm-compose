@@ -2,6 +2,7 @@
 
 require 'rubygems'
 require 'commander/import'
+require 'docker/swarm/compose'
 
 program :name, 'docker-swarm-compose'
 program :version, Docker::Swarm::Compose::VERSION
@@ -13,9 +14,7 @@ command :build do |c|
   c.description = ''
   c.example 'description', 'command example'
   c.option '--some-switch', 'Some switch that does something'
-  c.action do |args, options|
-    # Do something or c.when_called Docker-swarm-compose::Commands::Build
-  end
+  c.when_called Docker::Swarm::Compose::Commands::Build, :run
 end
 
 command :up do |c|
@@ -24,9 +23,7 @@ command :up do |c|
   c.description = ''
   c.example 'description', 'command example'
   c.option '--some-switch', 'Some switch that does something'
-  c.action do |args, options|
-    # Do something or c.when_called Docker-swarm-compose::Commands::Up
-  end
+  c.when_called Docker::Swarm::Compose::Commands::Up, :run
 end
 
 command :down do |c|
@@ -35,8 +32,6 @@ command :down do |c|
   c.description = ''
   c.example 'description', 'command example'
   c.option '--some-switch', 'Some switch that does something'
-  c.action do |args, options|
-    # Do something or c.when_called Docker-swarm-compose::Commands::Down
-  end
+  c.when_called Docker::Swarm::Compose::Commands::Down, :run
 end
 
