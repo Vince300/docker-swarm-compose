@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'commander/import'
+
+program :name, 'docker-swarm-compose'
+program :version, Docker::Swarm::Compose::VERSION
+program :description, 'Docker client program for composing on a Docker Swarm'
+
+command :build do |c|
+  c.syntax = 'docker-swarm-compose build [options]'
+  c.summary = ''
+  c.description = ''
+  c.example 'description', 'command example'
+  c.option '--some-switch', 'Some switch that does something'
+  c.action do |args, options|
+    # Do something or c.when_called Docker-swarm-compose::Commands::Build
+  end
+end
+
+command :up do |c|
+  c.syntax = 'docker-swarm-compose up [options]'
+  c.summary = ''
+  c.description = ''
+  c.example 'description', 'command example'
+  c.option '--some-switch', 'Some switch that does something'
+  c.action do |args, options|
+    # Do something or c.when_called Docker-swarm-compose::Commands::Up
+  end
+end
+
+command :down do |c|
+  c.syntax = 'docker-swarm-compose down [options]'
+  c.summary = ''
+  c.description = ''
+  c.example 'description', 'command example'
+  c.option '--some-switch', 'Some switch that does something'
+  c.action do |args, options|
+    # Do something or c.when_called Docker-swarm-compose::Commands::Down
+  end
+end
+
