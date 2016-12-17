@@ -2,7 +2,7 @@ require "docker/api/container"
 require "docker/api/container_change"
 require "docker/api/container_create_response"
 require "docker/api/container_top_response"
-require "docker/api/container_updated_response"
+require "docker/api/container_update_response"
 
 module Docker
   module Api
