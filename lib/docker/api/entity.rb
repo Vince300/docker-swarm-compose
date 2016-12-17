@@ -10,11 +10,14 @@ module Docker
       end
 
       def self.parse(client, hash)
-        inst = self.new(client)
+        self.new(client).parse(hash)
+      end
+
+      def parse(hash)
         hash.each do |k, v|
-          inst.send((Utils.snake_case(k) + '=').to_sym, v)
+          self.send((Utils.snake_case(k) + '=').to_sym, v)
         end
-        inst
+        self
       end
     end
   end

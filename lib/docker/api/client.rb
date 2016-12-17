@@ -1,4 +1,5 @@
 require "json"
+require "uri"
 require "docker/uri/unix"
 require "rest-client"
 require "docker/restclient/request"
@@ -19,8 +20,18 @@ module Docker
         end
       end
 
-      def containers
-        get('/containers/json', all: 1).collect { |c| Container.parse(self, c) }
+      def container(name_or_id, params = {}, existing = nil)
+        response = get("/containers/#{URI.encode(name_or_id)}/json", params)
+
+        if existing
+          existing.parse(response)
+        else
+          Container.parse(self, response)
+        end
+      end
+
+      def containers(params = {})
+        get('/containers/json', params).collect { |c| Container.parse(self, c) }
       end
 
       private
