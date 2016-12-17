@@ -11,6 +11,9 @@ require "docker/swarm/compose/service"
 require "docker/swarm/compose/volume"
 require "docker/swarm/compose/network"
 
+require "docker/uri/unix"
+require "docker/restclient/request"
+
 module Docker
   module Swarm
     module Compose
