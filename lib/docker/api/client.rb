@@ -28,7 +28,9 @@ module Docker
       end
 
       def get_raw(url, params)
-        RestClient.get(host.to_s + url, {params: params})
+        handle_errors do
+          RestClient.get(host.to_s + url, {params: params})
+        end
       end
 
       def post_json(url, params, payload)
@@ -36,7 +38,17 @@ module Docker
       end
 
       def post_json_raw(url, params, payload)
-        RestClient.post(host.to_s + url, payload.to_json, {params: params, content_type: :json})
+        handle_errors do
+          RestClient.post(host.to_s + url, payload.to_json, {params: params, content_type: :json})
+        end
+      end
+
+      def handle_errors
+        begin
+          yield
+        rescue RestClient::ExceptionWithResponse => e
+          fail JSON.load(e.response)['message']
+        end
       end
     end
   end
