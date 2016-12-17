@@ -1,4 +1,4 @@
-require "yaml"
+require "docker/swarm/compose/config"
 
 module Docker
   module Swarm
@@ -8,7 +8,7 @@ module Docker
 
         def self.load_config
           CONFIG_FILES.select { |file| File.exist? file }
-                      .map { |file| YAML.load_file(file) }
+                      .map { |file| Config.parse(file) }
                       .first
         end
 
