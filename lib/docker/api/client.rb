@@ -23,23 +23,23 @@ module Docker
       include Resources::Containers
 
       private
-      def get(url, params)
+      def get(url, params = {})
         JSON.load(get_raw(url, params))
       end
 
-      def get_raw(url, params)
+      def get_raw(url, params = {})
         handle_errors do
-          RestClient.get(host.to_s + url, {params: params})
+          RestClient.get(resource_url(url), {params: params})
         end
       end
 
-      def post_json(url, params, payload)
+      def post_json(url, params = {}, payload = nil)
         JSON.load(post_json_raw(url, params, payload))
       end
 
-      def post_json_raw(url, params, payload)
+      def post_json_raw(url, params = {}, payload = nil)
         handle_errors do
-          RestClient.post(host.to_s + url, payload.to_json, {params: params, content_type: :json})
+          RestClient.post(resource_url(url), payload.to_json, {params: params, content_type: :json})
         end
       end
 
@@ -49,6 +49,10 @@ module Docker
         rescue RestClient::ExceptionWithResponse => e
           fail JSON.load(e.response)['message']
         end
+      end
+
+      def resource_url(path)
+        host.to_s + path
       end
     end
   end

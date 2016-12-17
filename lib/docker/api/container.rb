@@ -12,7 +12,7 @@ module Docker
                     :graph_driver
 
       def inspect_container(include_size = false)
-        client.container(id, {size: !!include_size}, self)
+        client.container_inspect(id, {size: !!include_size}, self)
       end
     end
   end

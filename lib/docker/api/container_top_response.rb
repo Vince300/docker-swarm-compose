@@ -2,7 +2,7 @@ require "docker/api/entity"
 
 module Docker
   module Api
-    class TopResponse < Entity
+    class ContainerTopResponse < Entity
       attr_accessor :titles, :processes
 
       def processes

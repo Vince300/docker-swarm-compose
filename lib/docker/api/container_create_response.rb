@@ -2,7 +2,7 @@ require "docker/api/entity"
 
 module Docker
   module Api
-    class CreateResponse < Entity
+    class ContainerCreateResponse < Entity
       attr_accessor :id, :warnings
 
       def container(include_size = false)
