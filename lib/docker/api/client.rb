@@ -43,6 +43,12 @@ module Docker
         end
       end
 
+      def post_raw(url, params = {})
+        handle_errors do
+          RestClient.post(resource_url(url), nil, {params: params})
+        end
+      end
+
       def handle_errors
         begin
           yield

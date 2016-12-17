@@ -1,7 +1,8 @@
 require "docker/api/container"
+require "docker/api/container_change"
 require "docker/api/container_create_response"
 require "docker/api/container_top_response"
-require "docker/api/container_change"
+require "docker/api/container_updated_response"
 
 module Docker
   module Api
@@ -61,6 +62,118 @@ module Docker
                                         url: resource_url("/containers/#{id_or_name}/export"),
                                         raw_response: true)
           end
+        end
+
+        # Get container stats based on resource usage
+        # GET /containers/(id or name)/stats
+        def container_stats(id_or_name, stream = false)
+          fail "not yet implemented" if stream
+
+          # Return raw parsed response
+          get("/containers/#{URI.encode(id_or_name)}/stats")
+        end
+
+        # Resize a container TTY
+        # POST /containers/(id or name)/resize
+        def container_resize(id_or_name, params = {})
+          post_raw("/containers/#{URI.encode(id_or_name)}/resize", params)
+          true # sucess
+        end
+
+        # Start a container
+        # POST /containers/(id or name)/start
+        def container_start(id_or_name, params = {})
+          post_raw("/containers/#{URI.encode(id_or_name)}/start", params)
+          true # sucess
+        end
+
+        # Stop a container
+        # POST /containers/(id or name)/stop
+        def container_stop(id_or_name, params = {})
+          post_raw("/containers/#{URI.encode(id_or_name)}/stop", params)
+          true # sucess
+        end
+
+        # Restart a container
+        # POST /containers/(id or name)/restart
+        def container_restart(id_or_name, params = {})
+          post_raw("/containers/#{URI.encode(id_or_name)}/restart", params)
+          true # sucess
+        end
+
+        # Kill a container
+        # POST /containers/(id or name)/kill
+        def container_kill(id_or_name, params = {})
+          post_raw("/containers/#{URI.encode(id_or_name)}/kill", params)
+          true # sucess
+        end
+
+        # Update a container
+        # POST /containers/(id or name)/update
+        def container_update(id_or_name, config, params = {})
+          response = post_json("/containers/#{URI.encode(id_or_name)}/update", params, config)
+          ContainerUpdateResponse.parse(self, response)
+        end
+
+        # Rename a container
+        # POST /containers/(id or name)/rename
+        def container_rename(id_or_name, new_name)
+          post_raw("/containers/#{URI.encode(id_or_name)}/rename", name: new_name)
+          true # sucess
+        end
+
+        # Pause a container
+        # POST /containers/(id or name)/pause
+        def container_pause(id_or_name)
+          post_raw("/containers/#{URI.encode(id_or_name)}/pause")
+          true # sucess
+        end
+
+        # Unpause a container
+        # POST /containers/(id or name)/unpause
+        def container_pause(id_or_name)
+          post_raw("/containers/#{URI.encode(id_or_name)}/unpause")
+          true # sucess
+        end
+
+        # Attach to a container
+        # POST /containers/(id or name)/attach
+        def container_attach(id_or_name, params = {})
+          fail "not yet implemented"
+        end
+
+        # Wait a container
+        # POST /containers/(id or name)/wait
+        def container_wait(id_or_name, params = {})
+          response = post_json("/containers/#{URI.encode(id_or_name)}/wait")
+          response['StatusCode']
+        end
+
+        # Delete a container
+        # DELETE /containers/(id or name)
+        def container_delete(id_or_name, params = {})
+          RestClient::Request.execute method: :delete,
+            url: "/containers/#{URI.encode(id_or_name)}",
+            params: params
+          true # success
+        end
+
+        # Retrieving information about files and folders in a container
+        # HEAD /containers/(id or name)/archive
+        def container_archive_info(id_or_name, params = {})
+          fail "not yet implemented"
+        end
+
+        # Get an archive of a filesystem resource in a container
+        # GET /containers/(id or name)/archive
+        def container_archive_get(id_or_name, params = {})
+          fail "not yet implemented"
+        end
+
+        # Extract an archive of files or folders to a directory in a container
+        # PUT /containers/(id or name)/archive
+        def container_archive_put(id_or_name, params = {})
+          fail "not yet implemented"
         end
       end
     end
