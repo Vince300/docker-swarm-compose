@@ -4,7 +4,7 @@ require "docker/uri/unix"
 require "rest-client"
 require "docker/restclient/request"
 
-require "docker/api/container"
+require "docker/api/resources/containers"
 
 module Docker
   module Api
@@ -20,23 +20,23 @@ module Docker
         end
       end
 
-      def container(name_or_id, params = {}, existing = nil)
-        response = get("/containers/#{URI.encode(name_or_id)}/json", params)
-
-        if existing
-          existing.parse(response)
-        else
-          Container.parse(self, response)
-        end
-      end
-
-      def containers(params = {})
-        get('/containers/json', params).collect { |c| Container.parse(self, c) }
-      end
+      include Resources::Containers
 
       private
       def get(url, params)
-        JSON.load(RestClient.get(host.to_s + url, {params: params}).body)
+        JSON.load(get_raw(url, params))
+      end
+
+      def get_raw(url, params)
+        RestClient.get(host.to_s + url, {params: params})
+      end
+
+      def post_json(url, params, payload)
+        JSON.load(post_json_raw(url, params, payload))
+      end
+
+      def post_json_raw(url, params, payload)
+        RestClient.post(host.to_s + url, payload.to_json, {params: params, content_type: :json})
       end
     end
   end
