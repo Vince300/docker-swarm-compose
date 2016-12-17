@@ -14,6 +14,11 @@ require "docker/swarm/compose/network"
 require "docker/uri/unix"
 require "docker/restclient/request"
 
+require "docker/api/client"
+require "docker/api/utils"
+require "docker/api/entity"
+require "docker/api/container"
+
 module Docker
   module Swarm
     module Compose
