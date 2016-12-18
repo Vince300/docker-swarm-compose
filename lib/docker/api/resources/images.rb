@@ -7,6 +7,10 @@ module Docker
   module Api
     module Resources
       module Images
+        def default_registry_config
+          { "https://index.docker.io/v1/": {} }
+        end
+
         # List images
         # GET /images/json
         def images(params = {})
@@ -22,7 +26,7 @@ module Docker
 
         # Create an image
         # POST /images/create
-        def image_create(params = {}, auth_object = { "https://index.docker.io/v1/": {} })
+        def image_create(params = {}, auth_object = default_registry_config)
           events = []
           handler = proc do |response|
             # Create a response stream
