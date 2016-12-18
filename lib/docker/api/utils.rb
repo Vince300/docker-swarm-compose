@@ -14,20 +14,23 @@ module Docker
             end
             nil
           end
+          self.fill_size = 16
         end
 
         def unbuffered_read(length)
           if @mybuf.nil? || @mybuf.length == 0
             begin
               # Empty buffer, read some data
-              if @mybuf
-                @mybuf += @fiber.resume
-              else
-                @mybuf = @fiber.resume
-              end
+              read_data = @fiber.resume
 
-              # Buffer still nil?, ended
-              raise EOFError.new if @mybuf.nil?
+              # Detect end of stream
+              raise EOFError.new if read_data.nil?
+
+              if @mybuf
+                @mybuf += read_data
+              else
+                @mybuf = read_data
+              end
             rescue FiberError
               # End of request body
               raise EOFError.new
@@ -39,14 +42,14 @@ module Docker
 
           # Shrink buffer
           data = @mybuf.byteslice(0, read_len)
-          @mybuf = @mybuf.byteslice(read_len)
+          @mybuf = @mybuf.byteslice(read_len, @mybuf.length - read_len)
 
           return data
         end
       end
 
       def self.snake_case(str)
-        str.gsub(/([a-z])([A-Z])/, '\1_\2').
+        str.gsub(/([a-z0-9])([A-Z])/, '\1_\2').
           tr("-", "_").
           downcase
       end
