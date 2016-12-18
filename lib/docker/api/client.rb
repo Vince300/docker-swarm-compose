@@ -21,6 +21,10 @@ module Docker
         end
       end
 
+      def registry_config
+        { "https://index.docker.io/v1/": {} }
+      end
+
       include Resources::Containers
       include Resources::Images
 
