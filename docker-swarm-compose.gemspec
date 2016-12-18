@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "commander", "~> 4.4"
   spec.add_runtime_dependency "rest-client", "~> 2.0"
   spec.add_runtime_dependency "net_http_unix", "~> 0.2"
+  spec.add_runtime_dependency "io-like", "~> 0.3"
 end
