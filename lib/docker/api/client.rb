@@ -6,6 +6,7 @@ require "docker/restclient/request"
 
 require "docker/api/resources/containers"
 require "docker/api/resources/images"
+require "docker/api/resources/misc"
 
 module Docker
   module Api
@@ -19,6 +20,12 @@ module Docker
         else
           @host = host.sub(/\/*$/, '')
         end
+
+        # Check the version
+        v = version.api_version
+        if v != '1.24'
+          fail "unsupported API version #{v}"
+        end
       end
 
       def registry_config
@@ -27,6 +34,7 @@ module Docker
 
       include Resources::Containers
       include Resources::Images
+      include Resources::Misc
 
       private
       def get(url, params = {})
