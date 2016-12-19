@@ -1,6 +1,8 @@
 require "docker/api/volume"
 require "docker/api/volume_list_response"
 
+require "json"
+
 module Docker
   module Api
     module Resources
