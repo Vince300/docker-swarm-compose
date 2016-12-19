@@ -7,6 +7,7 @@ require "docker/restclient/request"
 require "docker/api/resources/containers"
 require "docker/api/resources/images"
 require "docker/api/resources/misc"
+require "docker/api/resources/volumes"
 
 module Docker
   module Api
@@ -35,6 +36,7 @@ module Docker
       include Resources::Containers
       include Resources::Images
       include Resources::Misc
+      include Resources::Volumes
 
       private
       def get(url, params = {})
