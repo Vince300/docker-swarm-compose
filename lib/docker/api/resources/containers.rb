@@ -43,7 +43,7 @@ module Docker
 
         # Get container logs
         # GET /containers/(id or name)/log
-        def container_logs(id_or_name, params)
+        def container_logs(id_or_name, params = {})
           raise NotImplementedError
         end
 
@@ -60,7 +60,7 @@ module Docker
           handle_errors do
             RestClient::Request.execute(method: :get,
                                         url: resource_url("/containers/#{id_or_name}/export"),
-                                        raw_response: true)
+                                        raw_response: true).file
           end
         end
 
@@ -131,7 +131,7 @@ module Docker
 
         # Unpause a container
         # POST /containers/(id or name)/unpause
-        def container_pause(id_or_name)
+        def container_unpause(id_or_name)
           post_raw("/containers/#{URI.encode(id_or_name)}/unpause")
           true # sucess
         end
@@ -149,9 +149,9 @@ module Docker
           response['StatusCode']
         end
 
-        # Delete a container
+        # Remove a container
         # DELETE /containers/(id or name)
-        def container_delete(id_or_name, params = {})
+        def container_remove(id_or_name, params = {})
           RestClient::Request.execute method: :delete,
             url: "/containers/#{URI.encode(id_or_name)}",
             headers: { params: params }
