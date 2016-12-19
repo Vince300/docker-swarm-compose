@@ -9,6 +9,9 @@ require "docker/api/resources/images"
 require "docker/api/resources/misc"
 require "docker/api/resources/volumes"
 
+require "docker/api/api_error"
+require "docker/api/daemon_error"
+
 module Docker
   module Api
     class Client
@@ -16,7 +19,7 @@ module Docker
 
       def initialize(host = '/var/run/docker.sock')
         if host =~ /^\//
-          fail "invalid socket" if host =~ /\/$/
+          fail ApiError, "invalid socket" if host =~ /\/$/
           @host = URI('unix://' + host)
         else
           @host = host.sub(/\/*$/, '')
@@ -25,7 +28,7 @@ module Docker
         # Check the version
         v = version.api_version
         if v != '1.24'
-          fail "unsupported API version #{v}"
+          fail ApiError, "unsupported API version #{v}"
         end
       end
 
@@ -69,7 +72,7 @@ module Docker
         begin
           yield
         rescue RestClient::ExceptionWithResponse => e
-          fail JSON.load(e.response)['message']
+          fail DaemonError, JSON.load(e.response)['message']
         end
       end
 

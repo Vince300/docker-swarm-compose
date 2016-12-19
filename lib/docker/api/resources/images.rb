@@ -20,7 +20,7 @@ module Docker
         # Build image
         # POST /build
         def image_build(context_file, params = {}, auth_object = registry_config)
-          fail "not yet implemented"
+          raise NotImplementedError
         end
 
         # Create an image

@@ -30,8 +30,7 @@ describe Docker::Api::Resources::Volumes do
     it "warns on invalid filters" do
       expect(@client).to receive(:warn).with("unexpected type for :filters parameter (Fixnum)")
 
-      # TODO: Use specific exception when implemented
-      expect { @client.volumes(filters: 1) }.to raise_error
+      expect { @client.volumes(filters: 1) }.to raise_error(Docker::Api::DaemonError)
     end
 
     after :all do

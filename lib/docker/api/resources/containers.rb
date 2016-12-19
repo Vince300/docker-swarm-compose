@@ -44,7 +44,7 @@ module Docker
         # Get container logs
         # GET /containers/(id or name)/log
         def container_logs(id_or_name, params)
-          fail "not yet implemented"
+          raise NotImplementedError
         end
 
         # Inspect changes on a container's filesystem
@@ -67,7 +67,7 @@ module Docker
         # Get container stats based on resource usage
         # GET /containers/(id or name)/stats
         def container_stats(id_or_name, stream = false)
-          fail "not yet implemented" if stream
+          raise NotImplementedError if stream
 
           # Return raw parsed response
           get("/containers/#{URI.encode(id_or_name)}/stats")
@@ -139,7 +139,7 @@ module Docker
         # Attach to a container
         # POST /containers/(id or name)/attach
         def container_attach(id_or_name, params = {})
-          fail "not yet implemented"
+          raise NotImplementedError
         end
 
         # Wait a container
@@ -161,19 +161,19 @@ module Docker
         # Retrieving information about files and folders in a container
         # HEAD /containers/(id or name)/archive
         def container_archive_info(id_or_name, params = {})
-          fail "not yet implemented"
+          raise NotImplementedError
         end
 
         # Get an archive of a filesystem resource in a container
         # GET /containers/(id or name)/archive
         def container_archive_get(id_or_name, params = {})
-          fail "not yet implemented"
+          raise NotImplementedError
         end
 
         # Extract an archive of files or folders to a directory in a container
         # PUT /containers/(id or name)/archive
         def container_archive_put(id_or_name, params = {})
-          fail "not yet implemented"
+          raise NotImplementedError
         end
       end
     end

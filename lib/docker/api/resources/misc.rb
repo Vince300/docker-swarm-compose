@@ -83,7 +83,7 @@ module Docker
         # Load a tarball with a set of images and tags into docker
         # POST /images/load
         def images_load(source, params = {})
-          fail "not yet implemented"
+          raise NotImplementedError
         end
 
         # Exec Create
@@ -96,7 +96,7 @@ module Docker
         # Exec Start
         # POST /exec/(id)/start
         def exec_start(id, params = {})
-          fail "not yet implemented"
+          raise NotImplementedError
         end
 
         # Exec Resize
