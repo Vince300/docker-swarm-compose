@@ -2,8 +2,14 @@ $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "docker/swarm/compose"
 
 RSpec::Matchers.define :named_object do |expected|
-  match do |actual|
-    actual.name == expected
+  if expected.respond_to? :name
+    match do |actual|
+      actual.name == expected.name
+    end
+  else
+    match do |actual|
+      actual.name == expected
+    end
   end
 
   description do

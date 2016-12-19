@@ -18,19 +18,17 @@ describe Docker::Api::Resources::Volumes do
       expect(@client.volumes).to be_a(Docker::Api::VolumeListResponse)
     end
 
-    it "accepts filters" do
-      filter = { 'name': [@volumes.first.name] }
-      [ filter, JSON.dump(filter) ].each do |f|
-        volumes = @client.volumes(filters: f).volumes
-        expect(volumes).to include(named_object @volumes[0].name)
-        expect(volumes).not_to include(named_object @volumes[1].name)
+    it "defaults to no filters" do
+      volumes = @client.volumes.volumes
+      @volumes.each do |volume|
+        expect(volumes).to include(named_object volume)
       end
     end
 
-    it "warns on invalid filters" do
-      expect(@client).to receive(:warn).with("unexpected type for :filters parameter (Fixnum)")
-
-      expect { @client.volumes(filters: 1) }.to raise_error(Docker::Api::DaemonError)
+    it "accepts filters" do
+      volumes = @client.volumes(name: [@volumes.first.name]).volumes
+      expect(volumes).to include(named_object @volumes[0])
+      expect(volumes).not_to include(named_object @volumes[1])
     end
 
     after :all do
