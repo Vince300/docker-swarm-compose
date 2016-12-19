@@ -9,6 +9,8 @@ require "docker/api/resources/images"
 require "docker/api/resources/misc"
 require "docker/api/resources/networks"
 require "docker/api/resources/nodes"
+require "docker/api/resources/services"
+require "docker/api/resources/swarm"
 require "docker/api/resources/volumes"
 
 require "docker/api/api_error"
@@ -47,6 +49,7 @@ module Docker
       include Resources::Misc
       include Resources::Volumes
       include Resources::Nodes
+      include Resources::Services
       include Resources::Swarm
       include Resources::Networks
 
