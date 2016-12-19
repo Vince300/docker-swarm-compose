@@ -41,9 +41,14 @@ module Docker
 
         # Inspect a service
         # GET /services/(id or name)
-        def service_inspect(id_or_name)
+        def service_inspect(id_or_name, existing = nil)
           response = get("/services/#{URI.encode(id_or_name)}")
-          Service.parse(self, response)
+
+          if existing
+            existing.parse(response)
+          else
+            Service.parse(self, response)
+          end
         end
 
         # Update a service
