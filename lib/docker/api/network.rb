@@ -2,7 +2,7 @@ require "docker/api/entity"
 
 module Docker
   module Api
-    class CommitResponse < Entity
+    class Network < Entity
     end
   end
 end

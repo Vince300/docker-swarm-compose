@@ -7,6 +7,7 @@ require "docker/restclient/request"
 require "docker/api/resources/containers"
 require "docker/api/resources/images"
 require "docker/api/resources/misc"
+require "docker/api/resources/networks"
 require "docker/api/resources/volumes"
 
 require "docker/api/api_error"
@@ -28,7 +29,7 @@ module Docker
         # Check the version
         v = version.api_version
         if v != '1.24'
-          fail ApiError, "unsupported API version #{v}"
+          warn "unsupported API version #{v}"
         end
       end
 
@@ -40,6 +41,7 @@ module Docker
       include Resources::Images
       include Resources::Misc
       include Resources::Volumes
+      include Resources::Networks
 
       private
       def get(url, params = {})
