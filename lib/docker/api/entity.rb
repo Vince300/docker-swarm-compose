@@ -32,6 +32,24 @@ module Docker
         self
       end
 
+      def self.nested_entities(attribute, entity_class)
+        define_method(attribute) do
+          value = instance_variable_get("@#{attribute}")
+          instance_variable_set("@#{attribute}", value = []) if value.nil?
+          value
+        end
+
+        define_method("#{attribute}=") do |value|
+          if not value.nil? and value.length > 0
+            if value[0].is_a? Hash
+              value = value.collect { |item| entity_class.parse(client, item) }
+            end
+          end
+
+          instance_variable_set("@#{attribute}", value || [])
+        end
+      end
+
       def method_missing(meth, *args)
         attr_name, setter, raw_name = attribute_properties(meth)
 
