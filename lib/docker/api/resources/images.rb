@@ -84,12 +84,14 @@ module Docker
         # Remove an image
         # DELETE /images/(name)
         def image_remove(name, params = {})
-          response = JSON.load(RestClient::Request.execute method: :delete,
-            url: resource_url("/images/#{URI.encode(name)}"),
-            headers: {
-              params: params
-          })
-          (response || []).collect { |e| ImageRemoveAction.parse(self, e) }
+          handle_errors do
+            response = JSON.load(RestClient::Request.execute method: :delete,
+              url: resource_url("/images/#{URI.encode(name)}"),
+              headers: {
+                params: params
+            })
+            (response || []).collect { |e| ImageRemoveAction.parse(self, e) }
+          end
         end
 
         # Search an image
@@ -113,8 +115,10 @@ module Docker
             end
           end
 
-          # Invoke callback
-          yield(handler)
+          handle_errors do
+            # Invoke callback
+            yield(handler)
+          end
           events
         end
       end

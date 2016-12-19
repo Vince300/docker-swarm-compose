@@ -50,8 +50,10 @@ module Docker
         # Remove a network
         # DELETE /networks/(id)
         def network_remove(network_id)
-          RestClient::Request.execute method: :delete,
-            url: resource_url("/networks/#{URI.encode(network_id)}")
+          handle_errors do
+            RestClient::Request.execute method: :delete,
+              url: resource_url("/networks/#{URI.encode(network_id)}")
+          end
           true # success
         end
       end

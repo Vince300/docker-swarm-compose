@@ -152,9 +152,11 @@ module Docker
         # Remove a container
         # DELETE /containers/(id or name)
         def container_remove(id_or_name, params = {})
-          RestClient::Request.execute method: :delete,
-            url: "/containers/#{URI.encode(id_or_name)}",
-            headers: { params: params }
+          handle_errors do
+            RestClient::Request.execute method: :delete,
+              url: "/containers/#{URI.encode(id_or_name)}",
+              headers: { params: params }
+          end
           true # success
         end
 

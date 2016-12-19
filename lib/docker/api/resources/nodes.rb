@@ -26,9 +26,11 @@ module Docker
         # Remove a node
         # DELETE /nodes/(id)
         def node_remove(id, params = {})
-          RestClient::Request.execute method: :delete,
-            url: resource_url("/nodes/#{URI.encode(id)}"),
-            headers: { params: params }
+          handle_errors do
+            RestClient::Request.execute method: :delete,
+              url: resource_url("/nodes/#{URI.encode(id)}"),
+              headers: { params: params }
+          end
           true # success
         end
 

@@ -53,10 +53,12 @@ module Docker
             end
           end
 
-          RestClient::Request.execute(method: :get,
-            url: resource_url("/events"),
-            headers: { params: params },
-            block_handler: handler)
+          handle_errors do
+            RestClient::Request.execute(method: :get,
+              url: resource_url("/events"),
+              headers: { params: params },
+              block_handler: handler)
+          end
           true # success
         end
 

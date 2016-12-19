@@ -36,8 +36,10 @@ module Docker
         # Remove a volume
         # DELETE /volumes/(name)
         def volume_remove(name)
-          RestClient::Request.execute method: :delete,
-            url: resource_url("/volumes/#{URI.encode(name)}")
+          handle_errors do
+            RestClient::Request.execute method: :delete,
+              url: resource_url("/volumes/#{URI.encode(name)}")
+          end
           true # success
         end
       end
