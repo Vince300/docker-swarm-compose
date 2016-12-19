@@ -38,6 +38,10 @@ module Docker
         { "https://index.docker.io/v1/": {} }
       end
 
+      def registry_header(value)
+        Base64.urlsafe_encode64(value.to_json)
+      end
+
       include Resources::Containers
       include Resources::Images
       include Resources::Misc

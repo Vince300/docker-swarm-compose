@@ -25,13 +25,13 @@ module Docker
 
         # Create an image
         # POST /images/create
-        def image_create(params = {}, auth_object = registry_config, &block)
+        def image_create(params = {}, &block)
           with_line_event_handler(block) do |handler|
             RestClient::Request.execute method: :post,
               url: resource_url('/images/create'),
               headers: {
                 params: params,
-                'X-Registry-Config': Base64.urlsafe_encode64(auth_object.to_json)
+                'X-Registry-Config': registry_header(registry_config))
               },
               block_response: handler
           end
@@ -53,13 +53,13 @@ module Docker
 
         # Push an image on the registry
         # POST /images/(name)/push
-        def image_push(name, params = {}, auth_object = registry_config, &block)
+        def image_push(name, params = {}, &block)
           with_line_event_handler(block) do |handler|
             RestClient::Request.execute method: :post,
               url: resource_url("/images/#{URI.encode(name)}/push"),
               headers: {
                 params: params,
-                'X-Registry-Config': Base64.urlsafe_encode64(auth_object.to_json)
+                'X-Registry-Config': registry_header(registry_config))
               },
               block_response: handler
           end
