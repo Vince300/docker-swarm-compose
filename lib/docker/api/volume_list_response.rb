@@ -8,13 +8,13 @@ module Docker
 
       def volumes=(value)
         # Auto-parse volume specifications
-        if value.length > 0
+        if not value.nil? and value.length > 0
           if value[0].is_a? Hash
             value = value.collect { |v| Volume.parse(client, v) }
           end
         end
 
-        @volumes = value
+        @volumes = value || []
       end
     end
   end

@@ -24,7 +24,7 @@ module Docker
 
         # Create a volume
         # POST /volumes/create
-        def volume_create(config)
+        def volume_create(config = {})
           response = post_json('/volumes/create', {}, config)
           Volume.parse(self, response)
         end

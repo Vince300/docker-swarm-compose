@@ -8,6 +8,10 @@ module Docker
       def inspect_volume
         client.volume_inspect(self.name, self)
       end
+
+      def remove
+        client.volume_remove(self.name)
+      end
     end
   end
 end
