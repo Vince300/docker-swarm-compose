@@ -74,7 +74,7 @@ module Docker
 
         # Remove an image
         # DELETE /images/(name)
-        def image_delete(name, params = {})
+        def image_remove(name, params = {})
           response = JSON.load(RestClient::Request.execute method: :delete,
             url: resource_url("/images/#{URI.encode(name)}"),
             headers: {
