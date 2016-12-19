@@ -19,8 +19,17 @@ module Docker
 
         # Build image
         # POST /build
-        def image_build(context_file, params = {}, auth_object = registry_config)
-          raise NotImplementedError
+        def image_build(context_file, params = {}, &block)
+          with_line_event_handler(block) do |handler|
+            RestClient::Request.execute method: :post,
+              url: resource_url("/build"),
+              headers: {
+                params: params,
+                content_type: 'application/tar'
+                'X-Registry-Config': registry_header(registry_config)
+              },
+              payload: context_file
+          end
         end
 
         # Create an image
