@@ -31,7 +31,7 @@ module Docker
               url: resource_url('/images/create'),
               headers: {
                 params: params,
-                'X-Registry-Config': registry_header(registry_config))
+                'X-Registry-Config': registry_header(registry_config)
               },
               block_response: handler
           end
@@ -59,7 +59,7 @@ module Docker
               url: resource_url("/images/#{URI.encode(name)}/push"),
               headers: {
                 params: params,
-                'X-Registry-Config': registry_header(registry_config))
+                'X-Registry-Config': registry_header(registry_config)
               },
               block_response: handler
           end
