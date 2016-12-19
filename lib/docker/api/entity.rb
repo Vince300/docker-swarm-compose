@@ -20,10 +20,12 @@ module Docker
       def parse(hash)
         @attributes = hash
 
-        @attributes.each do |k, v|
-          setter = (Utils.snake_case(k) + '=').to_sym
-          if respond_to? setter
-            send(setter, v)
+        update_attributes do
+          @attributes.each do |k, v|
+            setter = (Utils.snake_case(k) + '=').to_sym
+            if respond_to? setter
+              send(setter, v)
+            end
           end
         end
 
@@ -31,10 +33,55 @@ module Docker
       end
 
       def method_missing(meth, *args)
-        attr_name = meth.id2name
+        attr_name, setter, raw_name = attribute_properties(meth)
+
+        lookup_attribute(raw_name) do |attribute_name|
+          if @attributes.include? attribute_name
+            if setter
+              if args.length != 1
+                raise ArgumentError, "wrong number of arguments (given #{args.length}, expected 1)"
+              end
+
+              return (@attributes[attribute_name] = args[0])
+            else
+              if args.length != 0
+                raise ArgumentError, "wrong number of arguments (given #{args.length}, expected 0)"
+              end
+
+              return (@attributes[attribute_name])
+            end
+          end
+        end
+
+        super
+      end
+
+      def respond_to_missing?(meth, include_private = false)
+        attr_name, setter, raw_name = attribute_properties(meth)
+        attribute_name = lookup_attribute(raw_name)
+
+        @attributes.include? attribute_name || super
+      end
+
+      private
+      def attribute_properties(meth_name)
+        attr_name = meth_name.id2name
         setter = attr_name[-1] == '='
         raw_name = if setter then attr_name[0..-2] else attr_name end
 
+        return attr_name, setter, raw_name
+      end
+
+      def update_attributes
+        begin
+          @updating_attributes = true
+          yield
+        ensure
+          @updating_attributes = false
+        end
+      end
+
+      def lookup_attribute(raw_name)
         unless @@attr_lookup.include? raw_name
           @attributes.each do |k, v|
             if Utils.snake_case(k) == raw_name
@@ -44,25 +91,11 @@ module Docker
           end
         end
 
-        attribute_name = @@attr_lookup[raw_name]
-
-        if @attributes.include? attribute_name
-          if setter
-            if args.length != 1
-              raise ArgumentError, "wrong number of arguments (given #{args.length}, expected 1)"
-            end
-
-            return (@attributes[attribute_name] = args[0])
-          else
-            if args.length != 0
-              raise ArgumentError, "wrong number of arguments (given #{args.length}, expected 0)"
-            end
-
-            return (@attributes[attribute_name])
-          end
+        if block_given?
+          yield(@@attr_lookup[raw_name])
+        else
+          @@attr_lookup[raw_name]
         end
-
-        super
       end
     end
   end
