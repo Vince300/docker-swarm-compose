@@ -8,7 +8,6 @@ require "docker/swarm/compose/commands/up"
 
 require "docker/swarm/compose/config"
 require "docker/swarm/compose/service"
-require "docker/swarm/compose/volume"
 require "docker/swarm/compose/network"
 
 require "docker/uri/unix"
