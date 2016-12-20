@@ -8,8 +8,7 @@ module Docker
         attr_accessor :build, :image, :depends_on
         # Service properties
         attr_accessor :command, :environment, :labels, :log_driver, :log_opt,
-                      :networks, :volumes, :user, :working_dir, :restart,
-                      :mounts
+                      :networks, :user, :working_dir, :restart, :mounts
 
         def image_name
           "#{config.name}_#{name}"

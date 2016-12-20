@@ -6,15 +6,12 @@ module Docker
       module Commands
         class Up < Base
           def run(args, options)
-            # Check that all images are accessible
-            service_images = {}
             failure_count = 0
 
+            # Check that all images are accessible
             config.services.each do |service|
               begin
                 image = client.image_inspect(service.image_name)
-                service_images[service.name] = image
-                say "found image #{image.id} for #{service.name}"
               rescue Docker::Api::DaemonError => e
                 failure_count += 1
                 warn "could not find image for #{service.name}"
@@ -23,39 +20,6 @@ module Docker
 
             if failure_count > 0
               fail "one or more images were not found, the application can not be started"
-            end
-
-            # Create volumes
-            warned_user = false
-
-            config.volumes.each do |volume|
-              unless warned_user
-                warn "WARNING: Docker Swarm doesn't provide support for distributed volumes, what you are trying to do is impossible"
-                warn "         I will still create the volumes like you asked me to, but be careful."
-                warned_user = true
-              end
-
-              begin
-                existing_volume = client.volume_inspect(volume.volume_name)
-                say "volume #{volume.name} already exists"
-              rescue Docker::Api::DaemonError => e
-                if volume.external
-                  failure_count += 1
-                  warn "volume #{volume.volume_name} is external and has not been created yet"
-                else
-                  begin
-                    say "creating volume #{volume.name}"
-                    client.volume_create(volume.to_config)
-                  rescue Docker::Api::DaemonError => ee
-                    failure_count += 1
-                    warn "could not create volume #{volume.name}: #{ee.message}"
-                  end
-                end
-              end
-            end
-
-            if failure_count > 0
-              fail "one or more volumes could not be created, the application can not be started"
             end
 
             # Create networks

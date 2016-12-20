@@ -1,23 +1,21 @@
 require "yaml"
 
 require "docker/swarm/compose/service"
-require "docker/swarm/compose/volume"
 require "docker/swarm/compose/network"
 
 module Docker
   module Swarm
     module Compose
       class Config
-        attr_reader :services, :volumes, :networks, :file, :name
+        attr_reader :services, :networks, :file, :name
 
         def initialize(file)
           @file = file
           @name = File.basename(File.dirname(file))
         end
 
-        def load_resources(services, volumes, networks)
+        def load_resources(services, networks)
           @services = services
-          @volumes = volumes
           @networks = networks
           self
         end
@@ -28,7 +26,6 @@ module Docker
           config = Config.new(file)
           config.load_resources(
             parse_list(node['services'], Service, config),
-            parse_list(node['volumes'], Volume, config),
             parse_list(node['networks'], Network, config))
         end
 
