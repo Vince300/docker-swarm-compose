@@ -70,7 +70,8 @@ module Docker
             #   "Delay": update_delay,
             #   "FailureAction": update_failure_action
             # }
-            "Networks": (networks || []).collect { |network_name| { "Target": auto_network_name(network_name) } },
+            "Networks": (networks || []).collect { |network_name| { "Target": auto_network_name(network_name),
+            "Aliases": [ name ] } },
             # "EndpointSpec": {
             #   "Mode": endpoint_mode,
             #   "Ports": endpoint_ports
