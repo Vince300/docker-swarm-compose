@@ -1,5 +1,17 @@
 require "docker/swarm/compose/resource"
 
+class Hash
+  def compact(opts={})
+    inject({}) do |new_hash, (k,v)|
+      if !v.nil?
+        nv = opts[:recurse] && v.class == Hash ? v.compact(opts) : v
+        new_hash[k] = nv if nv.class != Hash || nv.length > 0
+      end
+      new_hash
+    end
+  end
+end
+
 module Docker
   module Swarm
     module Compose
@@ -12,6 +24,10 @@ module Docker
 
         def image_name
           "#{config.name}_#{name}"
+        end
+
+        def tagged_image_name(tag = 'latest')
+          "#{image_name}:#{tag}"
         end
 
         def service_name
@@ -32,7 +48,7 @@ module Docker
             "Labels": labels,
             "TaskTemplate": {
               "ContainerSpec": {
-                "Image": image_name,
+                "Image": tagged_image_name,
                 "Command": command,
                 # "Args": args,
                 "Env": environment,
@@ -59,12 +75,16 @@ module Docker
               "RestartPolicy": {
                 "Condition": restart || "none",
                 # "Delay": _delay,
-                # "Attempts": _attempts,
+                "MaxAttempts": 0,
                 # "Window": _window
               },
               # "Placement": placement
             },
-            # "Mode": mode,
+            "Mode": {
+              "Replicated": {
+                "Replicas": 1
+              }
+            },
             # "UpdateConfig": {
             #   "Parallelism": update_parallelism,
             #   "Delay": update_delay,
@@ -76,8 +96,8 @@ module Docker
             #   "Mode": endpoint_mode,
             #   "Ports": endpoint_ports
             # }
-          }.delete_if { |k, v| v.nil? }
-          #puts JSON.dump(c)
+          }.compact(recurse: true)
+          puts JSON.dump(c)
           c
         end
       end
