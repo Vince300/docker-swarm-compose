@@ -1,7 +1,7 @@
 module Docker
   module Swarm
     module Compose
-      module Resource
+      class Resource
         attr_reader :name
 
         def initialize(name)
