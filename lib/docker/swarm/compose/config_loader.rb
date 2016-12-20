@@ -4,7 +4,7 @@ module Docker
   module Swarm
     module Compose
       module ConfigLoader
-        CONFIG_FILES = %w(docker-compose.yml docker-compose.yaml)
+        CONFIG_FILES = %w(docker-swarm-compose.yml docker-swarm-compose.yaml)
 
         def self.load_config
           CONFIG_FILES.select { |file| File.exist? file }

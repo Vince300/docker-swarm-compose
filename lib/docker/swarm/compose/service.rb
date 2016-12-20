@@ -4,25 +4,81 @@ module Docker
   module Swarm
     module Compose
       class Service < Resource
-        attr_accessor :build, :cap_add, :cap_drop, :command, :cgroup_parent,
-                      :container_name, :devices, :depends_on, :dns, :dns_search,
-                      :tmpfs, :entrypoint, :env_file, :environment, :expose,
-                      :external_links, :extra_hosts, :group_add, :image,
-                      :isolation, :labels, :links, :logging, :log_driver,
-                      :log_opt, :net, :network_mode, :networks, :pid, :ports,
-                      :security_opt, :stop_signal, :ulimits, :volumes,
-                      :volume_driver
-
-        # Ignoring :extends on purpose for now.
-        # Ignoring :volumes_from on purpose for now.
-
-        attr_accessor :cpu_shares, :cpu_quota, :cpuset, :domainname, :hostname,
-                      :hostname, :ipc, :mac_address, :mem_limit, :memswap_limit,
-                      :oom_score_adj, :privileged, :read_only, :restart,
-                      :shm_size, :stdin_open, :tty, :user, :working_dir
+        # Compose properties
+        attr_accessor :build, :image, :depends_on
+        # Service properties
+        attr_accessor :command, :environment, :labels, :log_driver, :log_opt,
+                      :networks, :volumes, :user, :working_dir, :restart,
+                      :mounts
 
         def image_name
           "#{config.name}_#{name}"
+        end
+
+        def service_name
+          "#{config.name}_#{name}"
+        end
+
+        def auto_network_name(network_name)
+          if %w(bridge docker_gwbridge host ingress none).include? network_name
+            network_name
+          else
+            "#{config.name}_#{network_name}"
+          end
+        end
+
+        def to_config
+          c = {
+            "Name": service_name,
+            "Labels": labels,
+            "TaskTemplate": {
+              "ContainerSpec": {
+                "Image": image_name,
+                "Command": command,
+                # "Args": args,
+                "Env": environment,
+                "Dir": working_dir,
+                "User": user,
+                "Labels": labels,
+                "Mounts": mounts,
+                # "StopGracePeriod": stop_grace_period,
+              },
+              "LogDriver": {
+                "Name": log_driver,
+                "Options": log_opt
+              },
+              # "Resources": {
+              #   "Limits": {
+              #     "CPU": cpu_limit,
+              #     "Memory": memory_limit
+              #   },
+              #   "Reservation": {
+              #     "CPU": cpu_reservation,
+              #     "Memory": memory_reservation
+              #   }
+              # },
+              "RestartPolicy": {
+                "Condition": restart || "none",
+                # "Delay": _delay,
+                # "Attempts": _attempts,
+                # "Window": _window
+              },
+              # "Placement": placement
+            },
+            # "Mode": mode,
+            # "UpdateConfig": {
+            #   "Parallelism": update_parallelism,
+            #   "Delay": update_delay,
+            #   "FailureAction": update_failure_action
+            # }
+            "Networks": (networks || []).collect { |network_name| { "Target": auto_network_name(network_name) } },
+            # "EndpointSpec": {
+            #   "Mode": endpoint_mode,
+            #   "Ports": endpoint_ports
+            # }
+          }.delete_if { |k, v| v.nil? }
+          #puts JSON.dump(c)
+          c
         end
       end
     end

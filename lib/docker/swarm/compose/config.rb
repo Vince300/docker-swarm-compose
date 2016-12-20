@@ -19,16 +19,12 @@ module Docker
           @services = services
           @volumes = volumes
           @networks = networks
-          config
+          self
         end
 
         def self.parse(file)
           node = YAML.load_file(file)
 
-          unless %w(2.1 2).include? node['version']
-            fail "only version 2+ Docker Compose files are supported"
-          end
-          
           config = Config.new(file)
           config.load_resources(
             parse_list(node['services'], Service, config),

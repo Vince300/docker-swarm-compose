@@ -25,7 +25,7 @@ module Docker
                 content_type: :json
               },
               payload: config.to_json
-            ServiceCreateResponse.parse(self, response)
+            ServiceCreateResponse.parse(self, JSON.parse(response))
           end
         end
 

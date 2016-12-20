@@ -100,11 +100,15 @@ module Docker
       end
 
       def lookup_attribute(raw_name)
-        unless @@attr_lookup.include? raw_name
-          @attributes.each do |k, v|
-            if Utils.snake_case(k) == raw_name
-              @@attr_lookup[raw_name] = k
-              break
+        if raw_name == 'id'
+          @@attr_lookup[raw_name] = %w(id Id ID).select { |w| @attributes.include? w }.first
+        else
+          unless @@attr_lookup.include? raw_name
+            @attributes.each do |k, v|
+              if Utils.snake_case(k) == raw_name
+                @@attr_lookup[raw_name] = k
+                break
+              end
             end
           end
         end
