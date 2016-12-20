@@ -1,13 +1,10 @@
+require "docker/swarm/compose/resource"
+
 module Docker
   module Swarm
     module Compose
-      class Volume
-        def initialize
-        end
-
-        def self.parse(name, node)
-          fail "not yet implented"
-        end
+      class Volume < Resource
+        attr_accessor :driver, :driver_opts, :external, :labels
       end
     end
   end
