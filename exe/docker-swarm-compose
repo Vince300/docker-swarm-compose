@@ -12,9 +12,9 @@ command :build do |c|
   c.syntax = 'docker-swarm-compose build [options]'
   c.summary = 'Builds images required for running a composed application'
   c.description = <<-EOT
-  Uses the service build specifications to prepare the images required to run
-  this application. In the absence of a shared Docker registry, this command
-  must be run on all machines that are part of the target swarm.
+Uses the service build specifications to prepare the images required to run
+this application. In the absence of a shared Docker registry, this command
+must be run on all machines that are part of the target swarm.
   EOT
   c.example 'Default usage', 'docker-swarm-compose build'
   c.when_called Docker::Swarm::Compose::Commands::Build, :run
@@ -23,14 +23,23 @@ end
 command :up do |c|
   c.syntax = 'docker-swarm-compose up [options]'
   c.summary = 'Instantiate a composed application'
-  c.description = 'Not yet implemented.'
+  c.description = <<-EOT
+Creates service, network and volume instances to run the application defined
+in the Docker Compose file. Images must have been beforehand on all hosts that
+are part of the swarm, using the `docker-swarm-compose build` command.
+  EOT
+  c.example 'Default usage', 'docker-swarm-compose up'
   c.when_called Docker::Swarm::Compose::Commands::Up, :run
 end
 
 command :down do |c|
   c.syntax = 'docker-swarm-compose down [options]'
   c.summary = 'Terminate a composed application'
-  c.description = 'Not yet implemented.'
+  c.description = <<-EOT
+Terminates service, network and volume instances that have been created by the
+`docker-swarm-compose up` command.
+  EOT
+  c.example 'Default usage', 'docker-swarm-compose down'
   c.when_called Docker::Swarm::Compose::Commands::Down, :run
 end
 
