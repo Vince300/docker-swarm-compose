@@ -97,7 +97,9 @@ module Docker
               say "service #{service.name} already exists, updating"
 
               begin
-                existing_service.update(service.to_config, version: existing_service.version['Index'])
+                current_mode = existing_service.attributes['Mode']
+                existing_service.update(service.to_config(current_mode),
+                                        version: existing_service.version['Index'])
                 return true
               rescue Docker::Api::DaemonError => e
                 warn "failed to update service #{service.name}: #{e.message}"
