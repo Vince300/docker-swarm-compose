@@ -86,7 +86,12 @@ module Docker
         begin
           yield
         rescue RestClient::ExceptionWithResponse => e
-          fail DaemonError, JSON.load(e.response)['message']
+          error_message = JSON.load(e.response)
+          if error_message.nil?
+            fail DaemonError, e.message
+          else
+            fail DaemonError, error_message['message']
+          end
         end
       end
 

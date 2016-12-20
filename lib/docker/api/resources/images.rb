@@ -28,7 +28,9 @@ module Docker
                 content_type: 'application/tar',
                 'X-Registry-Config': registry_header(registry_config)
               },
-              payload: context_file
+              payload: context_file,
+              block_response: handler,
+              timeout: nil
           end
         end
 
@@ -42,7 +44,8 @@ module Docker
                 params: params,
                 'X-Registry-Config': registry_header(registry_config)
               },
-              block_response: handler
+              block_response: handler,
+              timeout: nil
           end
         end
 
@@ -70,7 +73,8 @@ module Docker
                 params: params,
                 'X-Registry-Config': registry_header(registry_config)
               },
-              block_response: handler
+              block_response: handler,
+              timeout: nil
           end
         end
 

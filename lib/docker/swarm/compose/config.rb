@@ -8,10 +8,14 @@ module Docker
   module Swarm
     module Compose
       class Config
-        def initialize(services, volumes, networks)
+        attr_reader :services, :volumes, :networks, :file, :name
+
+        def initialize(services, volumes, networks, file)
           @services = services
           @volumes = volumes
           @networks = networks
+          @file = file
+          @name = File.basename(File.dirname(file))
         end
 
         def self.parse(file)
@@ -23,7 +27,8 @@ module Docker
 
           Config.new((node['services'] || []).collect(&Service.method(:parse)),
                      (node['volumes'] || []).collect(&Volume.method(:parse)),
-                     (node['networks'] || []).collect(&Network.method(:parse)))
+                     (node['networks'] || []).collect(&Network.method(:parse)),
+                     file)
         end
       end
     end

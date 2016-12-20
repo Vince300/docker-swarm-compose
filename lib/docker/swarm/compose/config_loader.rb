@@ -8,7 +8,7 @@ module Docker
 
         def self.load_config
           CONFIG_FILES.select { |file| File.exist? file }
-                      .map { |file| Config.parse(file) }
+                      .map { |file| Config.parse(File.expand_path(file)) }
                       .first
         end
 
