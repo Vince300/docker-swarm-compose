@@ -59,7 +59,7 @@ module Docker
 
           def pull_service(service)
             # Name of the target image
-            image_name = "#{config.name}_#{service.name}"
+            image_name = service.image_name
             
             # Add :latest if needed
             from_image_name = service.image
@@ -82,7 +82,7 @@ module Docker
 
           def build_service(service)
             # Name of the target image
-            image_name = "#{config.name}_#{service.name}"
+            image_name = service.image_name
 
             # Notify user
             say "building #{service.name} to #{image_name}"
