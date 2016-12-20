@@ -17,6 +17,7 @@ module Docker
           unless @config
             fail "failed to load any of #{CONFIG_FILES.join(', ')}"
           end
+          @config
         end
       end
     end

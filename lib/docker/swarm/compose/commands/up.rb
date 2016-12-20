@@ -5,6 +5,9 @@ module Docker
     module Compose
       module Commands
         class Up < Base
+          def run(args, options)
+            puts config.inspect
+          end
         end
       end
     end

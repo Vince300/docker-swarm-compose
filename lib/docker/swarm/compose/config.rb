@@ -21,9 +21,9 @@ module Docker
             fail "only version 2+ Docker Compose files are supported"
           end
 
-          Config.new(node['services'].collect(&Service.method(:parse)),
-                     node['volumes'].collect(&Volume.method(:parse)),
-                     node['networks'].collect(&Network.method(:parse)))
+          Config.new((node['services'] || []).collect(&Service.method(:parse)),
+                     (node['volumes'] || []).collect(&Volume.method(:parse)),
+                     (node['networks'] || []).collect(&Network.method(:parse)))
         end
       end
     end
