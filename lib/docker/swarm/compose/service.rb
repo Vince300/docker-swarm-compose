@@ -18,6 +18,10 @@ module Docker
         attr_accessor :update_parallelism, :update_delay, :update_failure_action,
                       :replicas, :endpoint_mode, :ports
 
+        def mounts
+          @mounts || []
+        end
+
         def networks
           @networks || []
         end
@@ -63,7 +67,11 @@ module Docker
                 "Dir": working_dir,
                 "User": user,
                 "Labels": labels,
-                "Mounts": mounts,
+                "Mounts": mounts.collect { |mount|
+                  m = mount.dup
+                  m['Source'] = File.expand_path(File.join('..', m['Source']), config.file)
+                  m
+                },
                 "StopGracePeriod": stop_grace_period
               },
               "LogDriver": {
