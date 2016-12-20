@@ -25,7 +25,7 @@ module Docker
               url: resource_url("/build"),
               headers: {
                 params: params,
-                content_type: 'application/tar'
+                content_type: 'application/tar',
                 'X-Registry-Config': registry_header(registry_config)
               },
               payload: context_file
