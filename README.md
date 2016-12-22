@@ -1,4 +1,4 @@
-# Docker::Swarm::Compose
+# Docker::Swarm::Compose [![Build Status](https://travis-ci.org/Vince300/docker-swarm-compose.svg?branch=master)](https://travis-ci.org/Vince300/docker-swarm-compose)
 
 This Docker client program is an attempt at scaling Docker Swarm services based
 on compose file-like description.
