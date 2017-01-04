@@ -11,7 +11,7 @@ module Docker
 
         def self.parse(name, node, config)
           inst = self.new(name, config)
-          node.each do |k, v|
+          (node || {}).each do |k, v|
             if inst.respond_to? "#{k}="
               inst.send("#{k}=".to_sym, v)
             else

@@ -13,6 +13,10 @@ module Docker
           "#{config.name}_#{name}"
         end
 
+        def driver
+          @driver || 'overlay'
+        end
+
         def to_config
           c = {
             "Name": network_name,
