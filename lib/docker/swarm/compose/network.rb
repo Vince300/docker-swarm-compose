@@ -19,18 +19,18 @@ module Docker
 
         def to_config
           c = {
-            "Name": network_name,
-            "CheckDuplicate": true,
-            "Driver": driver,
-            "Internal": internal,
-            "IPAM": ipam || {
-              'Driver': 'default',
-              'Options': {},
-              'Config': []
+            "Name" => network_name,
+            "CheckDuplicate" => true,
+            "Driver" => driver,
+            "Internal" => internal,
+            "IPAM" => ipam || {
+              'Driver' => 'default',
+              'Options' => {},
+              'Config' => []
             },
-            "EnableIPv6": enable_ipv6,
-            "Options": driver_opts,
-            "Labels": labels
+            "EnableIPv6" => enable_ipv6,
+            "Options" => driver_opts,
+            "Labels" => labels
           }.delete_if { |k, v| v.nil? }
         end
       end
