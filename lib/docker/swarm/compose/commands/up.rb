@@ -97,7 +97,7 @@ module Docker
               say "service #{service.name} already exists, updating"
 
               begin
-                current_mode = existing_service.attributes['Mode']
+                current_mode = existing_service.attributes['Spec']['Mode']
                 existing_service.update(service.to_config(current_mode),
                                         version: existing_service.version['Index'])
                 return true
