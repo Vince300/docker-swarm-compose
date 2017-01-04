@@ -42,6 +42,10 @@ module Docker
           @ports || []
         end
 
+        def placement
+          @placement || []
+        end
+
         def image_name
           "#{config.name}_#{name}"
         end
@@ -94,7 +98,9 @@ module Docker
                 "MaxAttempts": restart_max_attempts,
                 "Window": restart_window
               },
-              "Placement": placement
+              "Placement": {
+                "Constraints": placement
+              }
             },
             "Mode": current_mode || {
               "Replicated": {
