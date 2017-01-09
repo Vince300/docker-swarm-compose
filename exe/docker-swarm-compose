@@ -29,6 +29,7 @@ in the Docker Compose file. Images must have been beforehand on all hosts that
 are part of the swarm, using the `docker-swarm-compose build` command.
   EOT
   c.example 'Default usage', 'docker-swarm-compose up'
+  c.option '--skip-services SERVICES', Array, 'comma-separated list of services to skip while starting'
   c.when_called Docker::Swarm::Compose::Commands::Up, :run
 end
 
