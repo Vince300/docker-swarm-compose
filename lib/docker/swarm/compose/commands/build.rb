@@ -20,10 +20,24 @@ module Docker
               end
             end
 
-            # Then build them (sequential for now)
-            services_to_build.each do |service|
-              build_service(service)
+            if options.parallel
+              # Then build them (parallel)
+              threads = services_to_build.collect { |service| Thread.new do build_service(service) end }
+              # Wait for completion
+              threads.each do |thd|
+                begin
+                  thd.join
+                rescue => e
+                  warn e
+                end
+              end
+            else
+              # Then build them (sequential)
+              services_to_build.each do |service|
+                build_service(service)
+              end
             end
+
 
             # And pull them (sequential for now)
             services_to_pull.each do |service|

@@ -17,6 +17,7 @@ this application. In the absence of a shared Docker registry, this command
 must be run on all machines that are part of the target swarm.
   EOT
   c.example 'Default usage', 'docker-swarm-compose build'
+  c.option '--parallel', 'build services in parallel'
   c.when_called Docker::Swarm::Compose::Commands::Build, :run
 end
 
