@@ -33,6 +33,8 @@ module Docker
               end
 
               if options.parallel
+                success = true
+
                 # Then build them (parallel)
                 threads = services_to_build.collect { |service| Thread.new do build_service(service) end }
                 # Wait for completion
@@ -40,9 +42,12 @@ module Docker
                   begin
                     thd.join
                   rescue => e
+                    success = false
                     warn e
                   end
                 end
+
+                exit 1 unless success
               else
                 # Then build them (sequential)
                 services_to_build.each do |service|
