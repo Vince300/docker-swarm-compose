@@ -18,6 +18,8 @@ must be run on all machines that are part of the target swarm.
   EOT
   c.example 'Default usage', 'docker-swarm-compose build'
   c.option '--parallel', 'build services in parallel'
+  c.option '--push DEST', String, 'target registry to push the built images to'
+  c.option '--pull SRC', String, 'source registry to pull the images from instead of building'
   c.when_called Docker::Swarm::Compose::Commands::Build, :run
 end
 

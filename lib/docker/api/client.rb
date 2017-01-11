@@ -38,8 +38,10 @@ module Docker
       end
 
       def registry_config
-        { "https://index.docker.io/v1/": {} }
+        @registry_config || { "https://index.docker.io/v1/": {} }
       end
+
+      attr_writer :registry_config
 
       def registry_header(value)
         Base64.urlsafe_encode64(value.to_json)

@@ -6,45 +6,82 @@ module Docker
       module Commands
         class Build < Base
           def run(args, options)
-            services_to_build = []
-            services_to_pull = []
+            if options.pull
+              # Pull all services from the specified remote
+              pull_url = options.pull
 
-            # Find services to build
-            config.services.each do |service|
-              if service.build
-                say "#{service.name} needs to be built"
-                services_to_build << service
-              elsif service.image
-                say "#{service.name} needs to be pulled"
-                services_to_pull << service
-              end
-            end
+              # Setup registry_config for push
+              client.registry_config = { pull_url => {} }
 
-            if options.parallel
-              # Then build them (parallel)
-              threads = services_to_build.collect { |service| Thread.new do build_service(service) end }
-              # Wait for completion
-              threads.each do |thd|
-                begin
-                  thd.join
-                rescue => e
-                  warn e
-                end
+              # Create images based on repository
+              config.services.each do |service|
+                pull_service(service, pull_url)
               end
             else
-              # Then build them (sequential)
-              services_to_build.each do |service|
-                build_service(service)
+              services_to_build = []
+              services_to_pull = []
+
+              # Find services to build
+              config.services.each do |service|
+                if service.build
+                  say "#{service.name} needs to be built"
+                  services_to_build << service
+                elsif service.image
+                  say "#{service.name} needs to be pulled"
+                  services_to_pull << service
+                end
+              end
+
+              if options.parallel
+                # Then build them (parallel)
+                threads = services_to_build.collect { |service| Thread.new do build_service(service) end }
+                # Wait for completion
+                threads.each do |thd|
+                  begin
+                    thd.join
+                  rescue => e
+                    warn e
+                  end
+                end
+              else
+                # Then build them (sequential)
+                services_to_build.each do |service|
+                  build_service(service)
+                end
+              end
+
+
+              # And pull them (sequential for now)
+              services_to_pull.each do |service|
+                pull_service(service)
+              end
+
+              say "build complete!"
+
+              if options.push
+                # Target repository
+                push_url = options.push
+
+                # Push all service images to the repository
+                config.services.each do |service|
+                  say "tagging #{service.tagged_image_name}"
+
+                  # Tag the image with the remote url
+                  client.image_tag(client.image_inspect(service.tagged_image_name).id,
+                                   repo: "#{push_url}/#{service.image_name}", tag: "latest")
+                end
+
+                # Setup registry_config for push
+                client.registry_config = { push_url => {} }
+
+                # Push everything
+                config.services.each do |service|
+                  event_stream do |handler|
+                    client.image_push("#{push_url}/#{service.image_name}", &handler)
+                  end
+                end
               end
             end
-
-
-            # And pull them (sequential for now)
-            services_to_pull.each do |service|
-              pull_service(service)
-            end
-
-            say "build complete!"
           end
 
           private
@@ -71,13 +108,17 @@ module Docker
             yield(handler)
           end
 
-          def pull_service(service)
+          def pull_service(service, pull_url = nil)
             # Name of the target image
             image_name = service.image_name
             
             # Add :latest if needed
-            from_image_name = service.image
+            from_image_name = if pull_url then image_name else service.image end
             from_image_name += ":latest" unless from_image_name =~ /:\w+$/
+
+            if pull_url
+              from_image_name = "#{pull_url}/#{from_image_name}"
+            end
 
             # Notify user
             say "pulling #{service.name} from #{from_image_name} to #{image_name}"
