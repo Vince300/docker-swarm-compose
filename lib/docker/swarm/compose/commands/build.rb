@@ -14,9 +14,14 @@ module Docker
               client.registry_config = { "http#{if options.insecure then '' else 's' end}://#{pull_url}" => {} }
 
               # Create images based on repository
+              success = true
               config.services.each do |service|
-                pull_service(service, pull_url)
+                unless pull_service(service, pull_url)
+                  success = false
+                end
               end
+
+              exit 1 unless success
             else
               services_to_build = []
               services_to_pull = []
@@ -137,8 +142,10 @@ module Docker
 
               # Then tag it
               client.image_tag(from_image_name, repo: image_name, tag: 'latest')
+              return true
             rescue Docker::Api::DaemonError => e
               say "=> failed pulling the image: #{e.message}"
+              return false
             end
           end
 
