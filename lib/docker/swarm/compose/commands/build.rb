@@ -11,7 +11,7 @@ module Docker
               pull_url = options.pull
 
               # Setup registry_config for push
-              client.registry_config = { pull_url => {} }
+              client.registry_config = { "http#{if options.insecure then '' else 's' end}://#{pull_url}" => {} }
 
               # Create images based on repository
               config.services.each do |service|
@@ -77,7 +77,7 @@ module Docker
                 end
 
                 # Setup registry_config for push
-                client.registry_config = { push_url => {} }
+                client.registry_config = { "http#{if options.insecure then '' else 's' end}://#{push_url}" => {} }
 
                 # Push everything
                 config.services.each do |service|

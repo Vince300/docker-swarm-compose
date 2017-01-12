@@ -20,6 +20,7 @@ must be run on all machines that are part of the target swarm.
   c.option '--parallel', 'build services in parallel'
   c.option '--push DEST', String, 'target registry to push the built images to'
   c.option '--pull SRC', String, 'source registry to pull the images from instead of building'
+  c.option '--insecure', 'use HTTP for pushing/pulling to/from the registry'
   c.when_called Docker::Swarm::Compose::Commands::Build, :run
 end
 
