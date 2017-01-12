@@ -105,6 +105,8 @@ module Docker
                   # output the status
                   puts event['status']
                 end
+              elsif event['error']
+                fail event['error']
               else
                 puts event.inspect
               end
