@@ -77,7 +77,7 @@ module Docker
                 "Labels" => labels,
                 "Mounts" => mounts.collect { |mount|
                   m = mount.dup
-                  m['Source'] = File.expand_path(File.join('..', m['Source']), config.file)
+                  m['Source'] = File.expand_path(File.join('..', m['Source']), config.file) unless m['Source'].start_with? "/"
                   m
                 },
                 "StopGracePeriod" => stop_grace_period
