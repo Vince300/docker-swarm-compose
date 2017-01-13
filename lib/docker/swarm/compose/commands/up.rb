@@ -100,7 +100,7 @@ module Docker
 
               begin
                 current_mode = existing_service.attributes['Spec']['Mode']
-                existing_service.update(service.to_config(current_mode),
+                existing_service.update(service.to_config(client, current_mode),
                                         version: existing_service.version['Index'])
                 return true
               rescue Docker::Api::DaemonError => e
@@ -110,7 +110,7 @@ module Docker
             rescue Docker::Api::DaemonError => e
               say "creating service #{service.name}"
               begin
-                client.service_create(service.to_config)
+                client.service_create(service.to_config(client))
                 return true
               rescue Docker::Api::DaemonError => ee
                 warn "failed to create service #{service.name}: #{ee.message}"

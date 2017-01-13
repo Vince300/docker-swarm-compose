@@ -62,13 +62,13 @@ module Docker
           "#{config.name}_#{name}"
         end
 
-        def to_config(current_mode = nil)
+        def to_config(client, current_mode = nil)
           cnf = {
             "Name" => service_name,
             "Labels" => labels,
             "TaskTemplate" => {
               "ContainerSpec" => {
-                "Image" => tagged_image_name,
+                "Image" => client.image_inspect(tagged_image_name).id,
                 "Command" => command,
                 "Args" => args,
                 "Env" => environment,
