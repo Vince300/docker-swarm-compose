@@ -57,7 +57,7 @@ module Docker
             delayed_services = []
 
             config.services.each do |service|
-              next if options.skip_services.include? service.name
+              next if (options.skip_services || []).include? service.name
 
               if service.depends_on and service.depends_on.length > 0
                 # has dependencies
