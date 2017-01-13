@@ -68,7 +68,7 @@ module Docker
             "Labels" => labels,
             "TaskTemplate" => {
               "ContainerSpec" => {
-                "Image" => client.image_inspect(tagged_image_name).id,
+                "Image" => tagged_image_name,
                 "Command" => command,
                 "Args" => args,
                 "Env" => environment,
@@ -133,6 +133,9 @@ module Docker
               }.select { |spec| not spec.nil? }.to_a
             }
           }
+
+          cnf['Labels'] ||= {}
+          cnf['Labels']['com.github.vince300.docker-swarm-compose.master-image-id'] = client.image_inspect(tagged_image_name).id
 
           # Build the mode node
           if current_mode
