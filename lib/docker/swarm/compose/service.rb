@@ -114,18 +114,18 @@ module Docker
             },
             "Networks" => networks.collect { |network_name| {
               "Target" => "#{config.name}_#{network_name}",
-              "Aliases" => [ name ] }
+              "Aliases" => [name]}
             },
             "EndpointSpec" => {
               "Mode" => endpoint_mode,
               "Ports" => ports.map { |port_spec|
                 parsed = port_spec.split(' =>')
                 if parsed.length == 3
-                  { 'Protocol' => parsed[0], 'PublishedPort' => parsed[1].to_i, 'TargetPort' => parsed[2].to_i }
+                  {'Protocol' => parsed[0], 'PublishedPort' => parsed[1].to_i, 'TargetPort' => parsed[2].to_i}
                 elsif parsed.length == 2
-                  { 'Protocol' => 'tcp', 'PublishedPort' => parsed[0].to_i, 'TargetPort' => parsed[1].to_i }
+                  {'Protocol' => 'tcp', 'PublishedPort' => parsed[0].to_i, 'TargetPort' => parsed[1].to_i}
                 elsif parsed.length == 1
-                  { 'Protocol' => 'tcp', 'PublishedPort' => parsed[0].to_i, 'TargetPort' => parsed[0].to_i }
+                  {'Protocol' => 'tcp', 'PublishedPort' => parsed[0].to_i, 'TargetPort' => parsed[0].to_i}
                 else
                   warn "port spec '#{port_spec}' is invalid, ignoring it"
                   nil
@@ -134,8 +134,9 @@ module Docker
             }
           }
 
-          cnf['Labels'] ||= {}
-          cnf['Labels']['com.github.vince300.docker-swarm-compose.master-image-id'] = client.image_inspect(tagged_image_name).id
+          # Add labels
+          add_swarm_labels(client, cnf)
+          add_swarm_labels(client, cnf['TaskTemplate']['ContainerSpec'])
 
           # Build the mode node
           if current_mode
@@ -153,13 +154,19 @@ module Docker
             end
           else
             if mode == 'global'
-              cnf['Mode'] = { "Global" => {} }
+              cnf['Mode'] = {"Global" => {}}
             else
-              cnf['Mode'] = { "Replicated" => { "Replicas" => replicas } }
+              cnf['Mode'] = {"Replicated" => {"Replicas" => replicas}}
             end
           end
 
           HashUtils.compact(cnf, recurse: true, exclude: %w(Global))
+        end
+
+        private
+        def add_swarm_labels(client, cnf)
+          cnf['Labels'] ||= {}
+          cnf['Labels']['com.github.vince300.docker-swarm-compose.master-image-id'] = client.image_inspect(tagged_image_name).id
         end
       end
     end
