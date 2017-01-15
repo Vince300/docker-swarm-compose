@@ -112,10 +112,18 @@ module Docker
               "Delay" => update_delay,
               "FailureAction" => update_failure_action
             },
-            "Networks" => networks.collect { |network_name| {
-              "Target" => "#{config.name}_#{network_name}",
-              "Aliases" => [name]}
-            },
+            "Networks" => if networks.is_a? Hash then
+                            networks.collect { |network_name, properties| {
+                              "Target" => "#{config.name}_#{network_name}",
+                              "Aliases" => (properties['aliases'] || []) + [name]
+                              }
+                            }
+                          else
+                            networks.collect { |network_name| {
+                              "Target" => "#{config.name}_#{network_name}",
+                              "Aliases" => [name]}
+                            }
+                          end,
             "EndpointSpec" => {
               "Mode" => endpoint_mode,
               "Ports" => ports.map { |port_spec|
