@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{A Docker Swarm client that scales services.}
   spec.description   = %q{This Docker client program is an attempt at scaling Docker Swarm services based on compose file-like description.}
-  spec.homepage      = "https://github.com/Vince300/docker-swarm-compose"
+  spec.homepage      = "https://github.com/vtavernier/docker-swarm-compose"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
