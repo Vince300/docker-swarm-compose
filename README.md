@@ -1,4 +1,4 @@
-# Docker::Swarm::Compose [![Build Status](https://travis-ci.org/Vince300/docker-swarm-compose.svg?branch=master)](https://travis-ci.org/Vince300/docker-swarm-compose)
+# Docker::Swarm::Compose [![Build Status](https://travis-ci.com/vtavernier/docker-swarm-compose.svg?branch=master)](https://travis-ci.com/vtavernier/docker-swarm-compose)
 
 This Docker client program is an attempt at scaling Docker Swarm services based
 on compose file-like description.
@@ -38,7 +38,7 @@ git commits and tags, and push the `.gem` file to
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at
-https://github.com/Vince300/docker-swarm-compose.
+https://github.com/vtavernier/docker-swarm-compose.
 
 ## License
 
